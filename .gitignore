@@ -30,6 +30,9 @@ build/
 *.pip
 *Pipfile.lock
 
+
+*.csv
+
 # pytest
 cache/
 *.testconfig
