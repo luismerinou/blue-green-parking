@@ -4,12 +4,20 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-streamlit = "*"
 pandas = "*"
 numpy = "*"
 fastapi = "*"
 uvicorn = "*"
 geopy = "*"
+pylint = "*"
+pydeck = "*"
+pyproj = "*"
+plotly = "*"
+dash = "*"
+folium = "*"
+streamlit-folium = "*"
+streamlit = "*"
+leafmap = "*"
 
 [dev-packages]
 
