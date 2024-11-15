@@ -22,15 +22,22 @@ st.write(f"Coordenadas 1: Latitud: {lat1}, Longitud: {lon1}")
 st.write(f"Coordenadas 2: Latitud: {lat2}, Longitud: {lon2}")
 
 # Crear un mapa de Leafmap
-m = leafmap.Map(center=((lat1 + lat2) / 2, (lon1 + lon2) / 2), zoom=15)
+leafmap_map = leafmap.Map(center=((lat1 + lat2) / 2, (lon1 + lon2) / 2), zoom=15)
 
 # Añadir marcadores para los puntos
-m.add_marker(location=(lat1, lon1), popup="Punto 1")
-m.add_marker(location=(lat2, lon2), popup="Punto 2")
+leafmap_map.add_marker(location=(lat1, lon1), popup="IR ")
+leafmap_map.add_marker(location=(lat2, lon2), popup="Punto 2")
 
 # Usar folium para agregar una línea entre los puntos
 line = folium.PolyLine(locations=[[lat1, lon1], [lat2, lon2]], color="red", weight=2)
-m.add_layer(line)
+leafmap_map.add_layer(line)
 
 # Mostrar el mapa en tamaño completo
-m.to_streamlit(height=800, use_container_width=True)
+leafmap_map.to_streamlit(height=1000, use_container_width=True)
+
+# Añadir un botón que genere la ruta en Google Maps
+if st.button('Generar ruta en Google Maps'):
+    org_lat, org_lon = lat1, lon1
+    dest_lat, dest_lon = lat2, lon2
+    url = f"https://www.google.com/maps/dir/{org_lat},{org_lon}/{dest_lat},{dest_lon}/&travelmode=walking"
+    st.markdown(f"[Ver ruta en Google Maps]({url})")
