@@ -18,6 +18,9 @@ folium = "*"
 streamlit-folium = "*"
 streamlit = "*"
 leafmap = "*"
+requests="*"
+flask="*"
+flask_cors="*"
 
 [dev-packages]
 
