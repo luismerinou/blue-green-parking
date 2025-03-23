@@ -88,6 +88,7 @@ def add_points_to_map(dataframe: pd.DataFrame, map_object: folium.Map):
                 color_map = {
                     'Verde': 'green',
                     'Azul': 'blue',
+                    'Naranja': 'orange'
                 }
 
                 icon_html = f"""
@@ -132,7 +133,7 @@ def main():
     st.title("Visualización de Puntos en un Mapa")
 
     with st.spinner("Cargando datos..."):
-        uploaded_file = 'csv/ser_calles_mockfile.csv'
+        uploaded_file = 'csv/calles_SER_2024.csv'
         df = load_csv(uploaded_file)
 
     if not df.empty:

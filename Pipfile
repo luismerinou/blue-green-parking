@@ -21,7 +21,8 @@ leafmap = "*"
 requests="*"
 flask="*"
 flask_cors="*"
-
+shapely="*"
+geopandas="*"
 [dev-packages]
 
 [requires]
