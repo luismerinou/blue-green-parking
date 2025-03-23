@@ -18,9 +18,7 @@ folium = "*"
 streamlit-folium = "*"
 streamlit = "*"
 leafmap = "*"
-requests="*"
-flask="*"
-flask_cors="*"
+streamlit_geolocation = "*"
 
 [dev-packages]
 
