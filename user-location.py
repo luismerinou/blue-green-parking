@@ -3,7 +3,7 @@ import logging
 import sys
 import folium
 from streamlit_folium import st_folium
-from streamlit_geolocation import streamlit_geolocation
+from streamlit_current_location import current_position
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -22,10 +22,16 @@ def create_map(latitude, longitude, zoom_start=15):
 
 
 def get_location():
-    location = streamlit_geolocation()
-    latitude = location.get("latitude", "N/A")
-    longitude = location.get("longitude", "N/A")
-    accuracy = location.get("accuracy", "N/A")
+    location = current_position()
+    st.write(
+        f"""your location is 
+        latitude: {location['latitude']}
+        longitude: {location['longitude']}
+        """
+    )
+    latitude = location["latitude"]
+    longitude = location["longitude"]
+    accuracy = 100
 
     if latitude is None or longitude is None:
         latitude, longitude = st.session_state.get("latitude"), st.session_state.get("longitude") # Puerta del Sol, Madrid

@@ -19,6 +19,7 @@ streamlit-folium = "*"
 streamlit = "*"
 leafmap = "*"
 streamlit_geolocation = "*"
+streamlit-current-location = "*"
 
 [dev-packages]
 
