@@ -22,6 +22,7 @@ logging.basicConfig(
 
 MADRID_SOL = {'lat': 40.416609, 'lon': -3.702556}
 DB_URL = os.environ.get("DB_URL")
+# st.set_page_config(layout="wide")
 
 def create_map(latitude, longitude, zoom_start=15, add_marker=False):
     mapa = folium.Map(location=[latitude, longitude], zoom_start=zoom_start)
@@ -108,13 +109,37 @@ def show_nearby_parking_lots(latitude, longitude):
                 total_lon = 0
                 marker_count = 0
 
+                image_path = "assets/google-maps.jpeg"
+                if os.path.exists(image_path):
+                    st.image(image_path, width=100)
+
                 for row in rows:
                     distrito, barrio, calle, num_finca, color, bateria_linea, num_plazas, gis_x, gis_y, longitud, latitud, distancia_metros = row
                     logger.info(f"Parking lot: {row}")
+                    directions_url = f"https://www.google.com/maps/dir/?api=1&origin={latitude},{longitude}&destination={latitud},{longitud}"
+
+                    popup_content = f"""
+                    <b>Parking:{calle.replace('.', '')}, Nº{num_finca} ({barrio})</b><br>
+                    <i>Distancia: {round(int(distancia_metros))} metros</i><br>
+                    <b>Plazas:</b> {round(num_plazas)}<br>
+                    <b>Batería:</b> {bateria_linea}
+                    <p></p>
+                    <a href="{directions_url}" target="_blank" style="background-color:#4285F4; color:white; padding: 10px 20px; text-align: center; display: inline-block; text-decoration: none; border-radius: 5px;">
+                        Ver ruta en Google Maps
+                    </a>
+                    """
+
+                    marker_icon = folium.Icon(
+                        icon='fa-car-side',
+                        prefix='fa',
+                        color='lightblue',
+                        icon_color='white'
+                    )
 
                     folium.Marker(
                         location=[latitud, longitud],
-                        popup=f"Parking:{calle} \n{num_finca} ({distancia_metros:.2f} metros)",
+                        popup=folium.Popup(popup_content, max_width=300),
+                        icon=marker_icon
                     ).add_to(mapa)
 
                     total_lat += latitud
@@ -137,8 +162,8 @@ def show_nearby_parking_lots(latitude, longitude):
 def main():
     init_session_state()
     try:
-        lat, long, accuracy = get_location()
-        # lat, long, accuracy = MADRID_SOL.get('lat'),  MADRID_SOL.get('lon'), 0
+        # lat, long, accuracy = get_location()
+        lat, long, accuracy = MADRID_SOL.get('lat'),  MADRID_SOL.get('lon'), 0
 
         st.write(f"Ubicación obtenida: Latitud: {lat}, Longitud: {long}, Accuracy: {accuracy}")
 
