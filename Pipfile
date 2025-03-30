@@ -19,9 +19,6 @@ leafmap = "*"
 streamlit = "*"
 streamlit-folium = "*"
 streamlit_geolocation = "*"
-streamlit-current-location = "*"
-
-ruff = "*"
 
 [dev-packages]
 
