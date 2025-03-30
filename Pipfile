@@ -6,19 +6,22 @@ name = "pypi"
 [packages]
 pandas = "*"
 numpy = "*"
+pyproj = "*"
+geopy = "*"
+
 fastapi = "*"
 uvicorn = "*"
-geopy = "*"
-pylint = "*"
-pydeck = "*"
-pyproj = "*"
-plotly = "*"
 dash = "*"
 folium = "*"
-streamlit-folium = "*"
-streamlit = "*"
+pydeck = "*"
+plotly = "*"
 leafmap = "*"
+streamlit = "*"
+streamlit-folium = "*"
 streamlit_geolocation = "*"
+streamlit-current-location = "*"
+
+ruff = "*"
 
 [dev-packages]
 
