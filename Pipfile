@@ -8,7 +8,6 @@ pandas = "*"
 numpy = "*"
 pyproj = "*"
 geopy = "*"
-
 fastapi = "*"
 uvicorn = "*"
 dash = "*"
@@ -19,6 +18,9 @@ leafmap = "*"
 streamlit = "*"
 streamlit-folium = "*"
 streamlit_geolocation = "*"
+streamlit-current-location = "*"
+ruff = "*"
+dotenv="*"
 
 [dev-packages]
 
