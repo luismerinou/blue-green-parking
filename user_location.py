@@ -5,6 +5,7 @@ import folium
 import streamlit as st
 from dotenv import load_dotenv
 
+from utils.icons_utils import get_car_side_icon, get_page_icon
 from utils.map_utils import MADRID_SOL, create_map, render_map, init_session_state
 from utils.sql_utils import get_parking_lots_around_me
 
@@ -17,9 +18,11 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)],
 )
 
-
-# st.set_page_config(layout="wide")
-
+st.set_page_config(
+    page_title="Blue green parking",
+    page_icon=":blue_car:",
+    layout="wide"
+)
 
 def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
     mapa = create_map(latitude, longitude, zoom_start=15, add_marker=True)
@@ -65,14 +68,10 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
                     </a>
                     """
 
-            marker_icon = folium.Icon(
-                icon="fa-car-side", prefix="fa", color="lightblue", icon_color="white"
-            )
-
             folium.Marker(
                 location=[latitud, longitud],
                 popup=folium.Popup(popup_content, max_width=300),
-                icon=marker_icon,
+                icon=get_car_side_icon(),
             ).add_to(mapa)
 
             total_lat += latitud
@@ -96,6 +95,7 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
 
 
 def main():
+    st.title("Blue green parking")
     init_session_state()
     try:
         # current_latitude, current_longitude, accuracy = get_location(logger)
