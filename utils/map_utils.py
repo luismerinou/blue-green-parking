@@ -4,6 +4,7 @@ from streamlit_current_location import current_position
 from streamlit_folium import st_folium
 
 from custom_exceptions.LocationError import LocationError
+from utils.icons_utils import get_my_location_icon
 
 MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 
@@ -11,13 +12,13 @@ MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 def create_map(latitude, longitude, zoom_start=15, add_marker=False):
     mapa = folium.Map(location=[latitude, longitude], zoom_start=zoom_start)
     if add_marker:
-        folium.Marker([latitude, longitude], popup="¡Aquí estás!").add_to(mapa)
+        folium.Marker([latitude, longitude], popup="¡Aquí estás!", icon=get_my_location_icon()).add_to(mapa)
     return mapa
 
 
 def render_map(mapa):
     map_key = f"mapa_{st.session_state['latitude']}_{st.session_state['longitude']}"
-    st_folium(mapa, width=700, height=500, key=map_key)
+    st_folium(mapa, width=2000, height=520, key=map_key)
 
 
 def init_session_state():
