@@ -60,7 +60,7 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
                     <b>Plazas:</b> {round(num_plazas)}<br>
                     <b>Batería:</b> {bateria_linea}
                     <p></p>
-                    <a href="{directions_url}" target="_blank" style="background-color:#4285F4; color:white; padding: 10px 20px; text-align: center; display: inline-block; text-decoration: none; border-radius: 5px;">
+                    <a href="{directions_url}&travelmode=driving" target="_blank" style="background-color:#4285F4; color:white; padding: 10px 20px; text-align: center; display: inline-block; text-decoration: none; border-radius: 5px;">
                         Ver ruta en Google Maps
                     </a>
                     """
@@ -109,7 +109,7 @@ def main():
             f"Ubicación obtenida: Latitud: {current_latitude}, Longitud: {current_longitude}, Accuracy: {accuracy}"
         )
 
-        show_nearby_parking_lots(current_latitude, current_longitude, distance_from_me=1500)
+        show_nearby_parking_lots(current_latitude, current_longitude, distance_from_me=1000)
 
     except Exception as e:
         logger.error(e)
