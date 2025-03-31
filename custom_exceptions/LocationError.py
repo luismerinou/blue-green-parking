@@ -18,11 +18,10 @@ class LocationError(Exception):
         return base_message
 
     def log_error(self):
-        logger = logging.getLogger('location_error_logger')
+        logger = logging.getLogger("location_error_logger")
         logging.basicConfig(
             level=logging.ERROR,
             format="%(asctime)s [%(levelname)s] %(message)s",
             handlers=[logging.StreamHandler(sys.stdout)],
         )
         logger.error(self.__str__())
-
