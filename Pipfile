@@ -21,6 +21,8 @@ streamlit_geolocation = "*"
 streamlit-current-location = "*"
 ruff = "*"
 dotenv="*"
+sqlalchemy = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
