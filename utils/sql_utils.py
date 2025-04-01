@@ -39,7 +39,8 @@ def query_near_parking_lots_from_me(
                    distance_from_me
                 where 
                    distancia_metros <= {distance_from_me} and color like '%Azul%'
-                order by distancia_metros; 
+                order by distancia_metros 
+                limit 10; 
            """
     )
 

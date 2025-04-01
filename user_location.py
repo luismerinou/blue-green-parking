@@ -5,8 +5,14 @@ import folium
 import streamlit as st
 from dotenv import load_dotenv
 
-from utils.icons_utils import get_car_side_icon, get_page_icon
-from utils.map_utils import MADRID_SOL, create_map, render_map, init_session_state
+from utils.icons_utils import get_car_side_icon, get_page_icon, get_pop_up_content
+from utils.map_utils import (
+    MADRID_SOL,
+    create_map,
+    render_map,
+    init_session_state,
+    get_location,
+)
 from utils.sql_utils import get_parking_lots_around_me
 
 load_dotenv()
@@ -19,10 +25,9 @@ logging.basicConfig(
 )
 
 st.set_page_config(
-    page_title="Blue green parking",
-    page_icon=":blue_car:",
-    layout="wide"
+    page_title="Blue green parking", page_icon=":blue_car:", layout="wide"
 )
+
 
 def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
     mapa = create_map(latitude, longitude, zoom_start=15, add_marker=True)
@@ -57,16 +62,15 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
             logger.info(f"Parking lot: {parking}")
             directions_url = f"https://www.google.com/maps/dir/?api=1&origin={latitude},{longitude}&destination={latitud},{longitud}"
 
-            popup_content = f"""
-                    <b>Parking:{calle.replace(".", "")}, Nº{num_finca} ({barrio})</b><br>
-                    <i>Distancia: {round(int(distancia_metros))} metros</i><br>
-                    <b>Plazas:</b> {round(num_plazas)}<br>
-                    <b>Batería:</b> {bateria_linea}
-                    <p></p>
-                    <a href="{directions_url}&travelmode=driving" target="_blank" style="background-color:#4285F4; color:white; padding: 10px 20px; text-align: center; display: inline-block; text-decoration: none; border-radius: 5px;">
-                        Ver ruta en Google Maps
-                    </a>
-                    """
+            popup_content = get_pop_up_content(
+                calle,
+                num_finca,
+                barrio,
+                distancia_metros,
+                num_plazas,
+                bateria_linea,
+                directions_url,
+            )
 
             folium.Marker(
                 location=[latitud, longitud],
@@ -98,18 +102,20 @@ def main():
     st.title("Blue green parking")
     init_session_state()
     try:
-        # current_latitude, current_longitude, accuracy = get_location(logger)
-        current_latitude, current_longitude, accuracy = (
-            MADRID_SOL.get("lat"),
-            MADRID_SOL.get("lon"),
-            0,
-        )
+        current_latitude, current_longitude, accuracy = get_location(logger)
+        # current_latitude, current_longitude, accuracy = (
+        #     MADRID_SOL.get("lat"),
+        #     MADRID_SOL.get("lon"),
+        #     0,
+        # )
 
         st.write(
             f"Ubicación obtenida: Latitud: {current_latitude}, Longitud: {current_longitude}, Accuracy: {accuracy}"
         )
 
-        show_nearby_parking_lots(current_latitude, current_longitude, distance_from_me=1000)
+        show_nearby_parking_lots(
+            current_latitude, current_longitude, distance_from_me=1000
+        )
 
     except Exception as e:
         logger.error(e)

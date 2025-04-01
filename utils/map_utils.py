@@ -12,7 +12,9 @@ MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 def create_map(latitude, longitude, zoom_start=15, add_marker=False):
     mapa = folium.Map(location=[latitude, longitude], zoom_start=zoom_start)
     if add_marker:
-        folium.Marker([latitude, longitude], popup="¡Aquí estás!", icon=get_my_location_icon()).add_to(mapa)
+        folium.Marker(
+            [latitude, longitude], popup="¡Aquí estás!", icon=get_my_location_icon()
+        ).add_to(mapa)
     return mapa
 
 
@@ -30,6 +32,7 @@ def init_session_state():
 
 def get_location(logger):
     location = current_position()
+    logger.info(location)
     if not location:
         logger.warning(
             "Current location not found, displaying default location MADRID PUERTA DEL SOL"
