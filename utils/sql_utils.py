@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
 load_dotenv()
-DB_URL = os.environ.get("DB_URL")
-
+CONNECTION_STRING = os.getenv("CONNECTION_STRING")
 
 def query_near_parking_lots_from_me(
     distance_from_me=500, current_longitude=0, current_latitude=0
@@ -18,10 +17,10 @@ def query_near_parking_lots_from_me(
                        calle, num_finca, color,
                        bateria_linea, num_plazas,
                        gis_x, gis_y,
-                       ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(gis_x::double precision, gis_y::double precision), 25830), 4326)) AS longitud,
-                       ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(gis_x::double precision, gis_y::double precision), 25830), 4326)) AS latitud
+                       ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(replace(gis_x, ',', '.')::double precision, replace(gis_y, ',', '.')::double precision), 25830), 4326)) AS longitud,
+                       ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(replace(gis_x, ',', '.')::double precision, replace(gis_y, ',', '.')::double precision), 25830), 4326)) AS latitud
                    from 
-                       public.calles_zona_ser_formatted
+                       public.calles_zona_ser_raw
                 ),
                 distance_from_me as (
                    select 
@@ -54,10 +53,10 @@ def get_nearest_parking_lot(current_longitude=0, current_latitude=0):
                     calle, num_finca, color,
                     bateria_linea, num_plazas,
                     gis_x, gis_y,
-                    ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(gis_x::double precision, gis_y::double precision), 25830), 4326)) AS longitud,
-                    ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(gis_x::double precision, gis_y::double precision), 25830), 4326)) AS latitud
+                    ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(replace(gis_x, ',', '.')::double precision, replace(gis_y, ',', '.')::double precision), 25830), 4326)) AS longitud,
+                    ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(replace(gis_x, ',', '.')::double precision, replace(gis_y, ',', '.')::double precision), 25830), 4326)) AS latitud
                 from 
-                    public.calles_zona_ser_formatted
+                    public.calles_zona_ser_raw
              ),
              distance_from_me as (
                 select 
@@ -88,7 +87,7 @@ def get_parking_lots_around_me(
         distance_from_me, current_longitude, current_latitude
     )
     try:
-        engine = create_engine(DB_URL)
+        engine = create_engine(CONNECTION_STRING)
         with engine.connect() as conn:
             result = conn.execute(query)
 
