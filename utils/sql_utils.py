@@ -1,5 +1,6 @@
 import os
 
+import streamlit as st
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
@@ -79,9 +80,9 @@ def get_nearest_parking_lot(current_longitude=0, current_latitude=0):
         """
     )
 
-
+@st.cache_data
 def get_parking_lots_around_me(
-    logger, distance_from_me=500, current_longitude=0, current_latitude=0
+    _logger, distance_from_me=500, current_longitude=0, current_latitude=0
 ):
     query = query_near_parking_lots_from_me(
         distance_from_me, current_longitude, current_latitude
@@ -91,9 +92,9 @@ def get_parking_lots_around_me(
         with engine.connect() as conn:
             result = conn.execute(query)
 
-            logger.info(f"EXECUTED QUERY: {query}\n\n")
+            _logger.info(f"EXECUTED QUERY: {query}\n\n")
 
             return result.fetchall()
 
     except Exception as e:
-        logger.error(e)
+        _logger.error(e)

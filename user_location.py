@@ -28,9 +28,12 @@ st.set_page_config(
     page_title="Blue green parking", page_icon=":blue_car:", layout="wide"
 )
 
+import streamlit as st
 
-def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
-    mapa = create_map(latitude, longitude, zoom_start=15, add_marker=True)
+
+@st.cache_data
+def get_cached_parking_lots(latitude, longitude, distance_from_me):
+    logger.info("Ejecutando búsqueda de aparcamientos en caché...")
 
     parking_lots_near_me = get_parking_lots_around_me(
         logger,
@@ -38,6 +41,14 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
         current_longitude=longitude,
         current_latitude=latitude,
     )
+
+    return parking_lots_near_me
+
+
+def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
+    mapa = create_map(latitude, longitude, zoom_start=15, add_marker=True)
+
+    parking_lots_near_me = get_cached_parking_lots(latitude, longitude, distance_from_me)
 
     if parking_lots_near_me:
         total_lat = 0
@@ -59,6 +70,7 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
                 latitud,
                 distancia_metros,
             ) = parking
+
             logger.info(f"Parking lot: {parking}")
             directions_url = f"https://www.google.com/maps/dir/?api=1&origin={latitude},{longitude}&destination={latitud},{longitud}"
 
