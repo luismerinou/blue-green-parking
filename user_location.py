@@ -13,7 +13,7 @@ from utils.map_utils import (
     init_session_state,
     get_location,
 )
-from utils.sql_utils import get_parking_lots_around_me
+from utils.sql_utils import get_parking_lots_around_me, get_nearest_parking_lot_from_user
 from utils.device_utils import detect_device
 
 load_dotenv()
@@ -64,6 +64,21 @@ def get_cached_parking_lots(latitude, longitude, distance_from_me):
 
     return parking_lots_near_me
 
+#### NUEVA FUNCION A COMPLETAR
+@st.cache_data
+def get_cached_nearest_parking_lots_from_user(latitude, longitude, distance_from_me):
+    """Gets all user nearest parking lots"""
+    logger.info("Ejecutando búsqueda de aparcamientos en caché...")
+    mapa = create_map(latitude, longitude, add_marker=True)
+
+    nearest_user_parking_lot = get_nearest_parking_lot_from_user(
+        logger,
+        distance_from_me=distance_from_me,
+        current_longitude=longitude,
+        current_latitude=latitude,
+    )
+
+    return nearest_user_parking_lot
 
 def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
     mapa = create_map(latitude, longitude, zoom_start=15, add_marker=True)
@@ -126,6 +141,37 @@ def show_nearby_parking_lots(latitude, longitude, distance_from_me=500):
         )
         render_map(mapa)
 
+def show_nearest_parking_lot_summary(latitude, longitude, distance_from_me=1000):
+    """Gets the user's nearest parking lot"""
+    nearest_parking = get_cached_nearest_parking_lots_from_user(
+        latitude, longitude, distance_from_me
+    )
+
+    if not nearest_parking:
+        st.warning("No se encontró ningún aparcamiento cercano.")
+        return
+    (
+        longitud,
+        latitud,
+        barrio,
+        calle,
+        color,
+        bateria_linea,
+        num_plazas,
+        distancia_metros,
+    ) = nearest_parking[0]
+
+    directions_url = f"https://www.google.com/maps/dir/?api=1&origin={latitude},{longitude}&destination={latitud},{longitud}"
+
+    st.markdown(f"""
+    <div style="background-color:#1E1E1E; padding: 1rem; border-radius: 12px; margin-top: 1rem;">
+        <h3 style="margin-bottom: 0.5rem;">🅿️ Aparcamiento más cercano</h3>
+        <p>Tu aparcamiento más cercano está a <strong>{round(distancia_metros, 0)}m</strong>, con <strong>{num_plazas}</strong> plazas en zona <strong style="color:{'blue' if color.lower() == 'azul' else 'green'};">{color}</strong>.</p>
+        <a href="{directions_url}" target="_blank" style="display:inline-block; background-color:#2563EB; color:white; padding:0.5rem 1rem; border-radius:8px; text-decoration:none; font-weight:600;">Ver en Google Maps</a>
+    </div>
+    """, unsafe_allow_html=True)
+
+
 def main():
     detect_device()
     st.title("")
@@ -139,6 +185,7 @@ def main():
             <h1 style='text-align: center; font-size:2.5rem; font-weight:700;'>Aparcamientos Zona SER Madrid</h1>
             <p style='text-align: center; color:#A1A1AA;'>Encuentra los aparcamientos más cercanos a ti</p>
         """, unsafe_allow_html=True)
+        show_nearest_parking_lot_summary(current_latitude, current_longitude, distance_from_me=1000)
         show_nearby_parking_lots(current_latitude, current_longitude, distance_from_me=1000)
 
     else:
@@ -150,6 +197,7 @@ def main():
                     <p style="font-size:1.1rem; color:#A1A1AA;">Encuentra los aparcamientos más cercanos a ti</p>
                 </div>
             """, unsafe_allow_html=True)
+            show_nearest_parking_lot_summary(current_latitude, current_longitude, distance_from_me=1000)
 
         with col2:
             show_nearby_parking_lots(current_latitude, current_longitude, distance_from_me=1000)
