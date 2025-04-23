@@ -2,12 +2,45 @@ import folium
 import streamlit as st
 from streamlit_current_location import current_position
 from streamlit_folium import st_folium
+import requests
 
 from custom_exceptions.LocationError import LocationError
 from utils.icons_utils import get_my_location_icon
 
 MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 
+
+@st.cache_data(ttl=600)
+def get_location_suggestions(query):
+    if not query or len(query) < 3:
+        return []
+
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": query,
+        "format": "json",
+        "limit": 5,
+    }
+
+    response = requests.get(url, params=params, headers={"User-Agent": "blue-green-parking-app"})
+    if response.status_code == 200:
+        return [item["display_name"] for item in response.json()]
+    return []
+
+def geocode_location(location_name):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": location_name,
+        "format": "json",
+        "limit": 1,
+    }
+
+    response = requests.get(url, params=params, headers={"User-Agent": "blue-green-parking-app"})
+    if response.status_code == 200 and response.json():
+        result = response.json()[0]
+        return float(result["lat"]), float(result["lon"])
+    else:
+        return None, None
 
 def create_map(latitude, longitude, zoom_start=16, add_marker=False):
     if st.session_state.get("is_mobile", False):
