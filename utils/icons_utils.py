@@ -1,10 +1,23 @@
 import folium
+from folium.features import DivIcon
 
 
-def get_car_side_icon():
-    return folium.Icon(
-        icon="fa-car-side", prefix="fa", color="lightblue", icon_color="white"
-    )
+def get_car_side_icon(color):
+    color_map = {
+        "azul": "#72C2E3",   # Azul claro
+        "verde": "#7bb074",  # Verde
+        "rojo": "#d95c5c",   # Rojo
+        "naranja": "#f4a261",  # Naranja
+        "alta rotación": "#e0bbff"
+    }
+    hex_color = color_map.get(color.lower(), "#ffffff")
+
+    html_icon = f"""
+    <div style="border-radius: 50%; background-color: {hex_color}; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+        <i class="fa fa-car-side" style="color:white; font-size:14px;"></i>
+    </div>
+    """
+    return DivIcon(html=html_icon)
 
 def get_my_location_icon():
     return folium.Icon(
