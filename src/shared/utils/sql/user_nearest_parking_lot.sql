@@ -5,6 +5,7 @@ distance_from_me as (
     latitud,
     barrio,
     calle,
+    num_finca,
     color,
     bateria_linea,
     num_plazas,
