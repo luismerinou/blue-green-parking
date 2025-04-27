@@ -11,10 +11,6 @@ class ParkingLot:
         self.num_plazas = num_plazas
         self.distancia_metros = distancia_metros
 
-    def is_nearby(self, distance_threshold: float = 500.0) -> bool:
-        """Devuelve True si el parking está dentro del umbral de distancia"""
-        return self.distancia_metros <= distance_threshold
-
     def __repr__(self):
         return (f"<ParkingLot {self.calle} {self.numero_finca} "
                 f"({self.barrio}) color={self.color} plazas={self.num_plazas}>")
