@@ -9,8 +9,15 @@ from utils.icons_utils import get_my_location_icon
 MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 
 
-def create_map(latitude, longitude, zoom_start=15, add_marker=False):
-    mapa = folium.Map(location=[latitude, longitude], zoom_start=zoom_start)
+def create_map(latitude, longitude, zoom_start=16, add_marker=False):
+    if st.session_state.get("is_mobile", False):
+        zoom_start = 15
+    print(zoom_start)
+    mapa = folium.Map(
+        location=[latitude, longitude],
+        zoom_start=zoom_start,
+        tiles="CartoDB dark_matter"
+    )
     if add_marker:
         folium.Marker(
             [latitude, longitude], popup="¡Aquí estás!", icon=get_my_location_icon()
@@ -19,8 +26,12 @@ def create_map(latitude, longitude, zoom_start=15, add_marker=False):
 
 
 def render_map(mapa):
+    is_mobile = st.session_state.get("is_mobile", False)
+    window_height = st.session_state.get("screen_height", 800)
+    height = int(window_height * 0.8) if is_mobile else int(window_height * 0.85)
+
     map_key = f"mapa_{st.session_state['latitude']}_{st.session_state['longitude']}"
-    st_folium(mapa, width=2000, height=520, key=map_key)
+    st_folium(mapa, width="100%", height=height, key=map_key)
 
 
 def init_session_state():
