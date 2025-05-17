@@ -10,7 +10,7 @@ from shared.utils.Icon import get_my_location_icon
 MADRID_SOL = {"lat": 40.416609, "lon": -3.702556}
 
 
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=600, show_spinner="Cargando...")
 def get_location_suggestions(query):
     """Devuelve sugerencias de ubicación a partir de un texto de búsqueda."""
     if not query or len(query) < 3:

@@ -21,6 +21,6 @@ select
 from 
     distance_from_me
 where 
-    distancia_metros <= {distance_from_me}
+    distancia_metros <= {distance_from_me} and color = 'Azul'
 order by distancia_metros 
 limit 500;

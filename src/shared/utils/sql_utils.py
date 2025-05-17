@@ -28,7 +28,7 @@ def execute_query(logger, query_text: str):
         logger.error(f"Error ejecutando query: {str(e)}")
         return []
 
-@st.cache_data
+@st.cache_data(show_spinner="Cargando...")
 def get_nearest_parking_lot_from_user(
     _logger, distance_from_me=500, current_longitude=0, current_latitude=0
 ):
@@ -44,7 +44,7 @@ def get_nearest_parking_lot_from_user(
     query =  text(formatted_query)
     return execute_query(_logger, query)
 
-@st.cache_data
+@st.cache_data(show_spinner="Cargando...")
 def get_parking_lots_around_me(
     _logger, distance_from_me=500, current_longitude=0, current_latitude=0
 ):
