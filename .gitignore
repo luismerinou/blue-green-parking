@@ -28,7 +28,6 @@ build/
 *.venv
 *.env
 *.pip
-*Pipfile.lock
 
 
 
