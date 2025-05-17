@@ -11,7 +11,7 @@ REGULAR="\\e[39m"
 SRC="/home/lmu/workspace/personal/blue-green-parking"
 
 run:
-	streamlit run src/Home.py
+	streamlit run src/app.py
 
 help: ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
